@@ -1,0 +1,17 @@
+Voici l'utilite des fichiers.
+
+ - test1.c:  tests pour les appels systemes
+ 
+ - demarre_err.c: ce fichier test demarre les tests test_err(1,2,3).c.  Ceux-ci
+                  generent differentes erreurs a l'execution.
+						
+ - demarre_t2.c : ce test sert a tester les algorithmes de planification par
+                  l'intermediaire de la console.  Il utilise les fichiers
+                  test2.c test2a.c et boucle.c. Ne fonctionne pas pour ceux qui
+						n'ont pas prevu la console.
+						
+ - demarre_t3.c : ce test sert a tester les algorithmes de planification par
+                  l'intermediaire des fichiers. Il utilise les fichiers test3.c,
+						test3a.c et boucle.c.
+						
+ - demarre_thread.c : contiendra le test de multi-thread.  
