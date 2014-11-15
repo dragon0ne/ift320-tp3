@@ -30,6 +30,8 @@
 Scheduler::Scheduler()
 { 
     readyList = new List; 
+	PlanificationAlgorithm *plop = new RoundRobin(readyList);
+	plop->FindNextToRun();
 } 
 
 //----------------------------------------------------------------------
@@ -145,3 +147,11 @@ Scheduler::Print()
     printf("Ready list contents:\n");
     readyList->Mapcar((VoidFunctionPtr) ThreadPrint);
 }
+
+//----------Planification algorithms
+/*Scheduler::PlanificationAlgorithm::PlanificationAlgorithm(List *readyList)
+{
+	//_readyList = readyList;
+}*/
+
+

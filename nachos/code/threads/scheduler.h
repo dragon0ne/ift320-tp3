@@ -31,6 +31,60 @@ class Scheduler {
   private:
     List *readyList;  		// queue of threads that are ready to run,
 				// but not running
+	class PlanificationAlgorithm
+	{
+		public:
+			PlanificationAlgorithm(List *readyList)
+			{
+				_readyList = readyList;
+			}
+			virtual Thread* FindNextToRun() 
+			{
+				return (Thread *)_readyList->Remove();
+			}
+		protected:
+			List *_readyList;  
+	};
+		
+	PlanificationAlgorithm *algo;
+	
+	class RoundRobin : public PlanificationAlgorithm
+	{
+		public:
+			RoundRobin(List *readyList) : PlanificationAlgorithm(readyList){}
+			virtual Thread* FindNextToRun()
+			{	
+				return (Thread *)_readyList->Remove();
+			}
+	};
+	
+	class StaticPriority : public PlanificationAlgorithm
+	{
+		public:
+			StaticPriority(List *readyList) : PlanificationAlgorithm(readyList){}
+			virtual Thread* FindNextToRun()
+			{	/*
+				ListElement *ptr = _readyList->first;
+				Thread *retained = ptr;
+				for (*ptr; ptr != NULL; ptr = ptr->next) 
+				{
+				   Thread *current = (Thread *)ptr;
+				}
+				*/
+				return (Thread *)_readyList->Remove();
+			}
+	};
+	
+	class DynamicPriority : public PlanificationAlgorithm
+	{
+		public:
+			DynamicPriority(List *readyList) : PlanificationAlgorithm(readyList){}
+			virtual Thread* FindNextToRun()
+			{	
+				return (Thread *)_readyList->Remove();
+			}
+	};
+	
 };
 
 #endif // SCHEDULER_H
