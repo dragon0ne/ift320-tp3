@@ -61,8 +61,10 @@ extern void Cleanup();
 static void
 TimerInterruptHandler(int dummy)
 {
+    printf(" ***** Timer interuption ******\n");
+	
     if (interrupt->getStatus() != IdleMode)
-	interrupt->YieldOnReturn();
+		interrupt->YieldOnReturn();
 }
 
 //----------------------------------------------------------------------
@@ -134,9 +136,12 @@ Initialize(int argc, char **argv)
     stats = new Statistics();			// collect statistics
     interrupt = new Interrupt;			// start up interrupt handling
     scheduler = new Scheduler();		// initialize the ready queue
-    if (randomYield)				// start the timer (if needed)
-	timer = new Timer(TimerInterruptHandler, 0, randomYield);
-
+    
+	//***
+	//if (randomYield)				// start the timer (if needed)
+	timer = new Timer(TimerInterruptHandler, 0, false);
+	//***
+	
     threadToBeDestroyed = NULL;
 
     // We didn't explicitly allocate the current thread we are running in.

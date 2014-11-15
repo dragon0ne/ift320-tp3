@@ -30,8 +30,7 @@
 Scheduler::Scheduler()
 { 
     readyList = new List; 
-	PlanificationAlgorithm *plop = new RoundRobin(readyList);
-	plop->FindNextToRun();
+	algo = new RoundRobin();
 } 
 
 //----------------------------------------------------------------------
@@ -72,7 +71,15 @@ Scheduler::ReadyToRun (Thread *thread)
 Thread *
 Scheduler::FindNextToRun ()
 {
-    return (Thread *)readyList->Remove();
+	printf("Looking fo the next thread to run\n");
+	Thread *choosed = algo->FindNextToRun(readyList);
+	if(choosed != NULL)
+		printf("Found next thread to run: \"%s\"\n", choosed->getName());
+	else	
+		printf("Didn't found any thread to run\n");
+	return choosed;
+	//algo->FindNextToRun(readyList);
+    //return (Thread *)readyList->Remove();
 }
 
 //----------------------------------------------------------------------

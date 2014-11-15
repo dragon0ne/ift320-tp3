@@ -44,7 +44,7 @@ ThreadTest()
     DEBUG('t', "Entering SimpleTest");
 
     Thread *t = new Thread("forked thread");
-
+	t->setPriority(10);
     t->Fork(SimpleThread, 1);
     SimpleThread(0);
 }

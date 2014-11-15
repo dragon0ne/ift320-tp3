@@ -34,16 +34,10 @@ class Scheduler {
 	class PlanificationAlgorithm
 	{
 		public:
-			PlanificationAlgorithm(List *readyList)
+			virtual Thread* FindNextToRun(List *readyList) 
 			{
-				_readyList = readyList;
+				return (Thread *)readyList->Remove();
 			}
-			virtual Thread* FindNextToRun() 
-			{
-				return (Thread *)_readyList->Remove();
-			}
-		protected:
-			List *_readyList;  
 	};
 		
 	PlanificationAlgorithm *algo;
@@ -51,37 +45,38 @@ class Scheduler {
 	class RoundRobin : public PlanificationAlgorithm
 	{
 		public:
-			RoundRobin(List *readyList) : PlanificationAlgorithm(readyList){}
-			virtual Thread* FindNextToRun()
+			virtual Thread* FindNextToRun(List *readyList)
 			{	
-				return (Thread *)_readyList->Remove();
+				if(readyList->IsEmpty())
+					return NULL;
+				return (Thread *)readyList->Remove();
 			}
 	};
 	
 	class StaticPriority : public PlanificationAlgorithm
 	{
 		public:
-			StaticPriority(List *readyList) : PlanificationAlgorithm(readyList){}
-			virtual Thread* FindNextToRun()
-			{	/*
-				ListElement *ptr = _readyList->first;
-				Thread *retained = ptr;
+			virtual Thread* FindNextToRun(List *readyList)
+			{	
+				ListElement *ptr = readyList->first;
+				Thread *retained = (Thread*) ptr->item;
 				for (*ptr; ptr != NULL; ptr = ptr->next) 
 				{
 				   Thread *current = (Thread *)ptr;
+				   if(current->getPriority() > retained->getPriority())
+						retained = current;
 				}
-				*/
-				return (Thread *)_readyList->Remove();
+				
+				return retained;
 			}
 	};
 	
 	class DynamicPriority : public PlanificationAlgorithm
 	{
 		public:
-			DynamicPriority(List *readyList) : PlanificationAlgorithm(readyList){}
-			virtual Thread* FindNextToRun()
+			virtual Thread* FindNextToRun(List *readyList)
 			{	
-				return (Thread *)_readyList->Remove();
+				return (Thread *)readyList->Remove();
 			}
 	};
 	

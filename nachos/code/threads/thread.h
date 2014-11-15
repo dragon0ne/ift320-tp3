@@ -80,6 +80,8 @@ class Thread {
     // THEY MUST be in this position for SWITCH to work.
     int* stackTop;			 // the current stack pointer
     int machineState[MachineStateSize];  // all registers except for stackTop
+	
+	int priority;
 
   public:
     Thread(char* debugName);		// initialize a Thread 
@@ -107,7 +109,8 @@ class Thread {
     void RemoveOpenFile(int);   
     OpenFile* GetOpenFile(int);
 
-    
+    int getPriority(){return priority;}
+	int setPriority(int value){priority = value;}
 
   private:
     // some of the private data for this class is listed above
