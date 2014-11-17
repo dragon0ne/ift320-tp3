@@ -52,7 +52,7 @@ void SyscallHandler(int);
 void ErrorHandler(ExceptionType);
 void Exit();
 SpaceId Exec();
-
+void Join();
 void Create();
 void Open();
 void Read();
@@ -63,13 +63,6 @@ void CopyFromUser(int, char*, int);
 void CopyToUser(int, char*, int);
 
 void func(int space);
-
-
-
-
-
-
-
 
 void
 ExceptionHandler(ExceptionType which)
@@ -83,8 +76,9 @@ ExceptionHandler(ExceptionType which)
 
 	else
 	{
-	printf("Unexpected user mode exception %d %d\n", which, type);
-	ASSERT(FALSE);
+		//ErrorHandler(type);
+		printf("Unexpected user mode exception %d %d\n", which, type);
+		ASSERT(FALSE);
     }
 }
 
@@ -104,6 +98,9 @@ SyscallHandler(int type)
 			break;
 		case SC_Exec :
 			Exec();
+			break;
+		case SC_Join:
+			Join();
 			break;
 		case SC_Create :
 			Create();
@@ -129,8 +126,9 @@ void Exit()
 {
 	currentThread->RemoveAllOpenFiles();
 	RemoveUserThread(currentThread);
+	int code = machine->ReadRegister(4);
 	
-	printf("Thread  %s terminé : ", currentThread->getName());
+	printf("Thread  %s terminé. Code de sortie: %d \n", currentThread->getName(), code);
 	printf("\n\n--EXIT---\n\n\n ");
 
 	currentThread->Finish();
@@ -138,11 +136,12 @@ void Exit()
 }
 SpaceId Exec()
 {
-  
 	int adress = machine->ReadRegister(4);
+	int priority = machine->ReadRegister(5);
+	char name[128];
+	CopyFromUser(adress, name, 128);
 	
-	char* name = new char[128];
-	printf("Exec\n");
+	printf("Exec de \"%s\" avec priorite %d\n", name, priority);
 
     OpenFile* openFile = fileSystem->Open(name);
 	if (openFile == NULL) {
@@ -155,13 +154,11 @@ SpaceId Exec()
 		
 		Thread *thread = new Thread(name);
 		thread->space = new AddrSpace(openFile);
+		thread->setPriority(priority);
 		
-		
-
 		//récupérer le numéro du processus et l'écrire dans le registre utilisateur
 		SpaceId value = addUserThread(thread);	
 		machine->WriteRegister(2, value);		
-		
 		
 		thread->Fork(func, 0);
 		
@@ -179,6 +176,10 @@ void func(int space)
 	machine->Run();
 }
 
+void Join()
+{
+	
+}
 
 
 void Create()
@@ -233,13 +234,9 @@ void Read()
 		OpenFile* openFile = currentThread->GetOpenFile(index);			
 		openFile->Read(text, size); 
 	}
-
-
-
 }
 void Write()
 {
-
 	int adress = machine->ReadRegister(4);
 	int size = machine->ReadRegister(5);
 	int index = machine->ReadRegister(6);
@@ -278,7 +275,6 @@ void CopyFromUser(int adress, char *buffer, int size)
 		i++;
 	}
 	while(i < size && value != 0);
-
 }
 
 
@@ -291,15 +287,14 @@ void CopyToUser(int adress, char *buffer, int size)
 		value = buffer[i];
 		machine->WriteMem(adress + i, 1, value);
 	}
-
 }
 
 
 
 void
-ErrorHandler(ExceptionType which)
+ErrorHandler(int type)
 {
-	switch(which) {
+	switch(type) {
 		case PageFaultException :
 			printf("PageFaultException");
 			break;
