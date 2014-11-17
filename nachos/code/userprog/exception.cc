@@ -96,24 +96,33 @@ SyscallHandler(int type)
 	
 		case SC_Halt :
 			DEBUG('a', "Shutdown, initiated by user program.\n");
+			printf("HALT !!!!! \n");
 			interrupt->Halt();
 			break;
 		case SC_Exit :
+			Exit();
 			break;
 		case SC_Exec :
+			Exec();
 			break;
 		case SC_Create :
+			Create();
 			break;
 		case SC_Open :
+			Open();
 			break;
 		case SC_Read :
+			Read();
 			break;
 		case SC_Write :
+			Write();
 			break;
 		case SC_Close :
+			Close();
 			break;
-	ModifyRegister();
+	
 	}
+	ModifyRegister();
 }
 
 void Exit()
@@ -122,6 +131,7 @@ void Exit()
 	RemoveUserThread(currentThread);
 	
 	printf("Thread  %s terminé : ", currentThread->getName());
+	printf("\n\n--EXIT---\n\n\n ");
 
 	currentThread->Finish();
 
@@ -132,7 +142,7 @@ SpaceId Exec()
 	int adress = machine->ReadRegister(4);
 	
 	char* name = new char[128];
-	printf("Exec");
+	printf("Exec\n");
 
     OpenFile* openFile = fileSystem->Open(name);
 	if (openFile == NULL) {

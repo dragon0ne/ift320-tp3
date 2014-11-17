@@ -11,32 +11,12 @@
  */
 
 #include "syscall.h"
-
+#include <stdio.h>
 
 int
 main()
 {    
-	//printf("toto"); // Impossible de foutre un fucking printf ou un debug
-	char tampon[30];
-	 OpenFileId input = ConsoleInput;
-    OpenFileId output = ConsoleOutput;
-	OpenFileId fich;	 
-   	int i;
-    Create("toto"); //fonctionne !!!
-    fich = Open("toto"); // semble fonctionner !!!!
-
-
-
-	for(i=1; i<10;i++)
-	{
- 		Write("ceci est un test\n", 30, fich);
- 	}
- /*  for(i=1; i<10;i++)
- 	 Write("CECI EST UN TEST\n", 18, output);*/
-/*   //Read(tampon, 17,fich);*/
-
-
-    Exit(3); // fonctionne !
-	//Halt();
+	printf("toto");
+    Halt();
     /* not reached */
 }
