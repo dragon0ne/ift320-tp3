@@ -71,12 +71,12 @@ Scheduler::ReadyToRun (Thread *thread)
 Thread *
 Scheduler::FindNextToRun ()
 {
-	printf("Looking fo the next thread to run\n");
+	printf("Looking for the next thread to run: ");
 	Thread *choosed = algo->FindNextToRun(readyList);
 	if(choosed != NULL)
-		printf("Found next thread to run: \"%s\"\n", choosed->getName());
+		printf("\"%s\"\n", choosed->getName());
 	else	
-		printf("Didn't found any thread to run\n");
+		printf("none\n");
 	return choosed;
 	//algo->FindNextToRun(readyList);
     //return (Thread *)readyList->Remove();
