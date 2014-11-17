@@ -34,6 +34,10 @@ class Scheduler {
 	class PlanificationAlgorithm
 	{
 		public:
+			virtual void JustExecuted(Thread* t)
+			{
+			}
+		
 			virtual Thread* FindNextToRun(List *readyList) 
 			{
 				return (Thread *)readyList->Remove();
@@ -56,8 +60,8 @@ class Scheduler {
 	class StaticPriority : public PlanificationAlgorithm
 	{
 		public:
-			virtual Thread* FindNextToRun(List *readyList)
-			{	
+			Thread* GetHigherPriority(List *readyList)
+			{
 				ListElement *ptr = readyList->first;
 				Thread *retained = (Thread*) ptr->item;
 				for (*ptr; ptr != NULL; ptr = ptr->next) 
@@ -69,14 +73,22 @@ class Scheduler {
 				
 				return retained;
 			}
-	};
-	
-	class DynamicPriority : public PlanificationAlgorithm
-	{
-		public:
+			
 			virtual Thread* FindNextToRun(List *readyList)
 			{	
-				return (Thread *)readyList->Remove();
+				return GetHigherPriority(readyList);
+			}
+	};
+	
+	class DynamicPriority : public StaticPriority
+	{
+		public:
+			//Décrémente la priorité du thread qui vient de s'exécuter
+			virtual void JustExecuted(Thread* t){t->decPriority();}
+			
+			virtual Thread* FindNextToRun(List *readyList)
+			{	
+				return StaticPriority::FindNextToRun(readyList);
 			}
 	};
 	

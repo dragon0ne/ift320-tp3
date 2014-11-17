@@ -110,7 +110,8 @@ class Thread {
     OpenFile* GetOpenFile(int);
 
     int getPriority(){return priority;}
-	int setPriority(int value){priority = value;}
+	void setPriority(int value){priority = value;}
+	void decPriority(){priority--;}
 
   private:
     // some of the private data for this class is listed above
