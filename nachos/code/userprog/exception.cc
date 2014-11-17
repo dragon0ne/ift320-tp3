@@ -210,6 +210,7 @@ void Open()
 	else 
 	{
 		// Placer dans la table des fichiers ouverts
+		printf("Ouverture du fichier : %s \n", name);
 		int index = currentThread->AddOpenFile(openFile);
 		machine->WriteRegister(2, index);
 	}
@@ -221,8 +222,7 @@ void Read()
 	int size = machine->ReadRegister(5);
 	int index = machine->ReadRegister(6);
 	char *text = new char[size];
-
-    CopyToUser(adress, text, size);
+  
 
     if (index == ConsoleInput)
     {
@@ -232,7 +232,8 @@ void Read()
 	{
 	
 		OpenFile* openFile = currentThread->GetOpenFile(index);			
-		openFile->Read(text, size); 
+		openFile->Read(text, size);
+		CopyToUser(adress, text, size); 
 	}
 }
 void Write()
@@ -258,8 +259,20 @@ void Write()
 
 void Close()
 {
+	printf("Liste des fichiers avant le close : \n");
+    currentThread->PrintOpenFiles();
+	
+
+
 	int index = machine->ReadRegister(4);
+	
 	currentThread->RemoveOpenFile(index);
+
+	printf("\n\nListe des fichiers après le close : \n");
+	 currentThread->PrintOpenFiles();
+
+
+
 
 }
 
@@ -296,22 +309,22 @@ ErrorHandler(int type)
 {
 	switch(type) {
 		case PageFaultException :
-			printf("PageFaultException");
+			printf("PageFaultException : No valid translation found");
 			break;
 		case ReadOnlyException :
-			printf("ReadOnlyException");
+			printf("ReadOnlyException : Write attempted to page marked read-only");
 			break;
 		case BusErrorException :
-			printf("BusErrorException");
+			printf("BusErrorException : Translation resulted in an invalid physical adress");
 			break;
 		case AddressErrorException :
-			printf("AddressErrorException");
+			printf("AddressErrorException : Unaligned reference or one that was beyond the end of the address space");
 			break;
 		case OverflowException :
-			printf("OverflowException");
+			printf("OverflowException : Integer overflow in add or sub.");
 			break;
 		case IllegalInstrException :
-			printf("IllegalInstrException");
+			printf("IllegalInstrException : Unimplemented or reserved instr.");
 			break;
 		case NumExceptionTypes :
 			printf("NumExceptionTypes");
@@ -319,7 +332,7 @@ ErrorHandler(int type)
 		default:
 			break;
 	}
-	
+	printf("\n Machine is halting\n");
 	interrupt->Halt();
 }
 void

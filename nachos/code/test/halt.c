@@ -18,19 +18,46 @@ main()
 {    
 	//printf("toto"); // Impossible de foutre un fucking printf ou un debug
 	char tampon[30];
-	 OpenFileId input = ConsoleInput;
-    OpenFileId output = ConsoleOutput;
-	OpenFileId fich;	 
+	//OpenFileId input = ConsoleInput;
+    //OpenFileId output = ConsoleOutput;
+	OpenFileId original, fich2;	 
    	int i;
-    Create("toto"); //fonctionne !!!
-    fich = Open("toto"); // semble fonctionner !!!!
+    Create("Plop"); //fonctionne !!!
+    original = Open("original"); // semble fonctionner !!!!
+
+  
 
 
 
+  // Write("HelloWorld\n",30,fich);   
+
+   Read(tampon, 30, original);
+ 
+ 	
+	fich2 = Open("original");
+   
+   //for(i =1; i<10;i++)
+	 Write(tampon, 30, fich2);
+
+// fermeture du fichier original
+	 Close(original);
+
+
+
+
+
+
+  /* for(i =1; i<3;i++)
+   {
+		Write("test", 30, fich);
+   }*/
+
+   // Exec("../../mon_test/mon_test1");
+/*
 	for(i=1; i<10;i++)
 	{
  		Write("ceci est un test\n", 30, fich);
- 	}
+ 	}*/
  /*  for(i=1; i<10;i++)
  	 Write("CECI EST UN TEST\n", 18, output);*/
 /*   //Read(tampon, 17,fich);*/

@@ -108,6 +108,7 @@ class Thread {
     void RemoveAllOpenFiles();
     void RemoveOpenFile(int);   
     OpenFile* GetOpenFile(int);
+    void PrintOpenFiles();
 
     int getPriority(){return priority;}
 	void setPriority(int value){priority = value;}

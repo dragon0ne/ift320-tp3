@@ -359,12 +359,25 @@ void Thread::RemoveAllOpenFiles()
 
 void Thread::RemoveOpenFile(int index) 
 {
-    openFiles[index - 2] = NULL;       
+    openFiles[index - 2] = NULL;           
 }
 
 OpenFile* Thread::GetOpenFile(int index) 
 {
     return openFiles[index - 2];
+}
+
+void Thread::PrintOpenFiles() {
+
+
+    for (int i = 0; i < 10; i++) {
+        if (openFiles[i] != NULL) {
+            printf("Fichier : %i existe\n", i + 2);
+        }
+        else {
+            printf("L'emplacement %i est vide\n", i + 2);
+        }
+    }
 }
 
 
