@@ -13,6 +13,8 @@
 #include "list.h"
 #include "thread.h"
 
+//#define ThreadListSize 20
+
 // The following class defines the scheduler/dispatcher abstraction -- 
 // the data structures and operations needed to keep track of which 
 // thread is running, and which threads are ready but not running.
@@ -27,6 +29,7 @@ class Scheduler {
 					// list, if any, and return thread.
     void Run(Thread* nextThread);	// Cause nextThread to start running
     void Print();			// Print contents of ready list
+	void setAlgo(int algo);
     
   private:
     List *readyList;  		// queue of threads that are ready to run,
@@ -34,12 +37,15 @@ class Scheduler {
 	class PlanificationAlgorithm
 	{
 		public:
-			virtual void JustExecuted(Thread* t)
+			virtual void AppendInList(Thread* t, List *readyList)
 			{
+				readyList->SortedInsert(t, t->getPriority());
 			}
 		
 			virtual Thread* FindNextToRun(List *readyList) 
 			{
+				if(readyList->IsEmpty())
+					return NULL;
 				return (Thread *)readyList->Remove();
 			}
 	};
@@ -48,48 +54,27 @@ class Scheduler {
 	
 	class RoundRobin : public PlanificationAlgorithm
 	{
-		public:
-			virtual Thread* FindNextToRun(List *readyList)
-			{	
-				if(readyList->IsEmpty())
-					return NULL;
-				return (Thread *)readyList->Remove();
-			}
+		virtual void AppendInList(Thread* t, List *readyList)
+		{
+				readyList->Append((void *)t);
+		}
 	};
 	
 	class StaticPriority : public PlanificationAlgorithm
 	{
-		public:
-			Thread* GetHigherPriority(List *readyList)
-			{
-				ListElement *ptr = readyList->first;
-				Thread *retained = (Thread*) ptr->item;
-				for (*ptr; ptr != NULL; ptr = ptr->next) 
-				{
-				   Thread *current = (Thread *)ptr;
-				   if(current->getPriority() > retained->getPriority())
-						retained = current;
-				}
-				
-				return retained;
-			}
-			
-			virtual Thread* FindNextToRun(List *readyList)
-			{	
-				return GetHigherPriority(readyList);
-			}
+
 	};
 	
 	class DynamicPriority : public StaticPriority
 	{
 		public:
 			//Décrémente la priorité du thread qui vient de s'exécuter
-			virtual void JustExecuted(Thread* t){t->decPriority();}
-			
-			virtual Thread* FindNextToRun(List *readyList)
-			{	
-				return StaticPriority::FindNextToRun(readyList);
+			virtual void AppendInList(Thread* t, List *readyList)
+			{
+				t->decPriority();
+				PlanificationAlgorithm::AppendInList(t, readyList);
 			}
+
 	};
 	
 };

@@ -29,9 +29,27 @@
 
 Scheduler::Scheduler()
 { 
+	//readyList = (Thread*) malloc (sizeof(Thread) * ThreadListSize);
     readyList = new List; 
 	algo = new RoundRobin();
 } 
+
+void Scheduler::setAlgo(int nalgo)
+{
+	switch (nalgo)
+	{	
+		case 2: 
+			algo = new StaticPriority();
+			break;
+		case 3: 
+			algo = new DynamicPriority();
+			break;
+		default: 
+			algo = new RoundRobin();
+			break;
+		
+	}
+}
 
 //----------------------------------------------------------------------
 // Scheduler::~Scheduler
@@ -57,7 +75,7 @@ Scheduler::ReadyToRun (Thread *thread)
     DEBUG('t', "Putting thread %s on ready list.\n", thread->getName());
 
     thread->setStatus(READY);
-    readyList->Append((void *)thread);
+	algo->AppendInList(thread, readyList);
 }
 
 //----------------------------------------------------------------------
@@ -74,12 +92,10 @@ Scheduler::FindNextToRun ()
 	printf("Looking for the next thread to run: ");
 	Thread *choosed = algo->FindNextToRun(readyList);
 	if(choosed != NULL)
-		printf("\"%s\"\n", choosed->getName());
+		printf("\"%s\" Priority: %d\n", choosed->getName(), choosed->getPriority());
 	else	
 		printf("none\n");
 	return choosed;
-	//algo->FindNextToRun(readyList);
-    //return (Thread *)readyList->Remove();
 }
 
 //----------------------------------------------------------------------

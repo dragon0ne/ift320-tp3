@@ -189,10 +189,11 @@ Thread::Yield ()
     IntStatus oldLevel = interrupt->SetLevel(IntOff);
     
     ASSERT(this == currentThread);
-    
+
     DEBUG('t', "Yielding thread \"%s\"\n", getName());
-    //printf("Yielding thread \"%s\"\n", getName());
+    printf("Yielding thread \"%s\"\n", getName());
     nextThread = scheduler->FindNextToRun();
+	printf("plop");
     if (nextThread != NULL) {
 	scheduler->ReadyToRun(this);
 	scheduler->Run(nextThread);

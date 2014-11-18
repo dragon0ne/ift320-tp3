@@ -105,7 +105,7 @@ main(int argc, char **argv)
         }else if (!strcmp(*argv, "-x")) {        	// run a user program
 			ASSERT(argc > 1);
 			algo = (algo==0)?1:algo;
-			printf("Algo = %i\n", algo);
+			scheduler->setAlgo(algo);
             StartProcess(*(argv + 1));
             argCount = 2;
         } else if (!strcmp(*argv, "-c")) {      // test the console
