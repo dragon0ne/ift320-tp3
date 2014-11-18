@@ -49,7 +49,7 @@
 //----------------------------------------------------------------------
 
 void SyscallHandler(int);
-void ErrorHandler(ExceptionType);
+void ErrorHandler(ExceptionType which);
 void Exit();
 SpaceId Exec();
 void Join();
@@ -76,7 +76,7 @@ ExceptionHandler(ExceptionType which)
 
 	else
 	{
-		//ErrorHandler(type);
+		ErrorHandler(which);
 		printf("Unexpected user mode exception %d %d\n", which, type);
 		ASSERT(FALSE);
     }
@@ -305,9 +305,11 @@ void CopyToUser(int adress, char *buffer, int size)
 
 
 void
-ErrorHandler(int type)
+ErrorHandler(ExceptionType which)
 {
-	switch(type) {
+	
+	printf("\n\n------Exception détectée---------\n\n");
+	switch(which) {
 		case PageFaultException :
 			printf("PageFaultException : No valid translation found");
 			break;
@@ -332,7 +334,7 @@ ErrorHandler(int type)
 		default:
 			break;
 	}
-	printf("\n Machine is halting\n");
+	//printf("\nMachine is halting\n");
 	interrupt->Halt();
 }
 void
