@@ -71,7 +71,7 @@ class Scheduler {
 			//Décrémente la priorité du thread qui vient de s'exécuter
 			virtual void AppendInList(Thread* t, List *readyList)
 			{
-				t->decPriority();
+				t->incPriority();
 				PlanificationAlgorithm::AppendInList(t, readyList);
 			}
 

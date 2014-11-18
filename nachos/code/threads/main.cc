@@ -93,14 +93,12 @@ main(int argc, char **argv)
         if (!strcmp(*argv, "-z"))               // print copyright
             printf (copyright);
 #ifdef USER_PROGRAM
+		currentThread->setPriority(5);
 		if (!strcmp(*argv, "-a1")){
-			printf("a1\n");
 			algo = 1;	
-		}else if (!strcmp(*argv, "-a2")) {      
-			printf("a2\n");		
+		}else if (!strcmp(*argv, "-a2")) {      	
 			algo = 2;
-        }else if (!strcmp(*argv, "-a3")) {  
-			printf("a3\n");	      	
+        }else if (!strcmp(*argv, "-a3")) {       	
 			algo = 3;
         }else if (!strcmp(*argv, "-x")) {        	// run a user program
 			ASSERT(argc > 1);
